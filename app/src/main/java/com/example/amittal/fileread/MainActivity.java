@@ -5,9 +5,12 @@ import android.net.Uri;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
+
+import java.io.File;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -24,6 +27,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         getFile();
+        /*try{
+            ExcelDataRead.read("/storage/emulated/0/Download/myExcel.xls");
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }*/
         //test();
     }
 
@@ -52,18 +60,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Toast.makeText(this, "Please install a File Manager.",
                         Toast.LENGTH_SHORT).show();
             }
+
         //}else{
-            Toast.makeText(this, chooser.getDataString(),Toast.LENGTH_SHORT).show();
-        //}
+            //Toast.makeText(this, dbStr,Toast.LENGTH_SHORT).show();
+        //}/data/local/tmp/com.example.amittal.fileread
     }
 
-    public void test(){
+    /*public void test(){
 
         Intent intent = new Intent();
-        intent.setType("video/*");
+        intent.setType("video*//*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent, "Select Video"), 1);
-    }
+    }*/
 
     public void onActivityResult(int requestCode, int resultCode, Intent result) {
 
@@ -73,8 +82,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Uri data = result.getData();
 
                 Toast.makeText(this, data.getPath(), Toast.LENGTH_SHORT).show();
+                File downloadDir = new File(Environment.getExternalStoragePublicDirectory(
+                        Environment.DIRECTORY_DOWNLOADS).getAbsolutePath());
+                getFilesFromDir(downloadDir);
+
                 if(data.getLastPathSegment().endsWith("xls")){
-                    ExcelDataRead.readExcelFile(MainActivity.this, data.getPath());
+                    String dbStr = Environment.getExternalStorageDirectory().getAbsolutePath()+"/Download/myExcel.xls";
+                    ExcelDataRead.readExcelFile(MainActivity.this, dbStr);
 
                     Toast.makeText(this, "valid file type", Toast.LENGTH_SHORT).show();
                 } else {
@@ -85,6 +99,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         } else{
             Toast.makeText(this, "No result found == -1", Toast.LENGTH_SHORT).show();
+        }
+    }
+    public void getFilesFromDir(File filesFromSD) {
+
+        File listAllFiles[] = filesFromSD.listFiles();
+
+        if (listAllFiles != null && listAllFiles.length > 0) {
+            for (File currentFile : listAllFiles) {
+                if (currentFile.isDirectory()) {
+                    getFilesFromDir(currentFile);
+                } else {
+                    if (currentFile.getName().endsWith("")) {
+                        // File absolute path
+                        Log.e("File path", currentFile.getAbsolutePath());
+                        // File Name
+                        Log.e("File path", currentFile.getName());
+
+                    }
+                }
+            }
         }
     }
 }

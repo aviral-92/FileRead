@@ -27,7 +27,9 @@ public class ExcelDataRead {
             // Creating Input Stream
             Log.d(TAG,filename);
             //Log.d(TAG,android.os.Environment.get);
-            File file = new File(context.getExternalFilesDir(null), filename);
+            Log.d(TAG,context.getExternalFilesDir(null).getCanonicalPath()+"/../../");
+            File file = new File(filename);
+            //getFilesFromDir(file);
             FileInputStream myInput = new FileInputStream(file);
 
 
@@ -59,5 +61,24 @@ public class ExcelDataRead {
         return;
     }
 
+    /*public static void read(String file) throws IOException, TikaException, SAXException {
+
+        //detecting the file type
+        BodyContentHandler handler = new BodyContentHandler();
+        Metadata metadata = new Metadata();
+        FileInputStream inputstream = new FileInputStream(new File(file));
+        ParseContext pcontext = new ParseContext();
+
+        //OOXml parser
+        OOXMLParser  msofficeparser = new OOXMLParser ();
+        msofficeparser.parse(inputstream, handler, metadata,pcontext);
+        System.out.println("Contents of the document:" + handler.toString());
+        System.out.println("Metadata of the document:");
+        String[] metadataNames = metadata.names();
+
+        for(String name : metadataNames) {
+            System.out.println(name + ": " + metadata.get(name));
+        }
+    }*/
 
 }
