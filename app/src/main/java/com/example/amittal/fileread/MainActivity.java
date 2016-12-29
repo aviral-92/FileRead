@@ -88,7 +88,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 if(data.getLastPathSegment().endsWith("xls")){
                     String dbStr = Environment.getExternalStorageDirectory().getAbsolutePath()+"/Download/myExcel.xls";
-                    ExcelDataRead.readExcelFile(MainActivity.this, dbStr);
+                    ExcelDataRead excelDataRead = new ExcelDataRead();
+                    excelDataRead.readExcelFile(MainActivity.this, dbStr);
 
                     Toast.makeText(this, "valid file type", Toast.LENGTH_SHORT).show();
                 } else {
