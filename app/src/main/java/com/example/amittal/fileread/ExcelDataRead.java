@@ -36,26 +36,17 @@ public class ExcelDataRead {
         try {
             // Creating Input Stream
             Log.d(TAG,filename);
-            //Log.d(TAG,android.os.Environment.get);
-            Log.d(TAG,context.getExternalFilesDir(null).getCanonicalPath()+"/../../");
-
             File file = new File(filename);
             //getFilesFromDir(file);
             FileInputStream myInput = new FileInputStream(file);
-
-
             // Create a POIFSFileSystem object
             POIFSFileSystem myFileSystem = new POIFSFileSystem(myInput);
-
             // Create a workbook using the File System
             HSSFWorkbook myWorkBook = new HSSFWorkbook(myFileSystem);
-
             // Get the first sheet from workbook
             HSSFSheet mySheet = myWorkBook.getSheetAt(0);
-
             /** We now need something to iterate through the cells.**/
             Iterator rowIter = mySheet.rowIterator();
-
             while (rowIter.hasNext()) {
                 HSSFRow myRow = (HSSFRow) rowIter.next();
                 Iterator cellIter = myRow.cellIterator();
@@ -72,12 +63,12 @@ public class ExcelDataRead {
         return;
     }
 
-    private void iterating(Iterator cellIter, Context context){
+    private void iterating(Iterator cellIterator, Context context){
 
         int i=1;
         FileReadPojo fileReadPojo = new FileReadPojo();
-        while (cellIter.hasNext()){
-            HSSFCell myCell = (HSSFCell) cellIter.next();
+        while (cellIterator.hasNext()){
+            HSSFCell myCell = (HSSFCell) cellIterator.next();
             Log.d(TAG, "Cell Value: " + myCell.toString());
             Toast.makeText(context, "cell Value: " + myCell.toString(), Toast.LENGTH_SHORT).show();
             if(i%2!=0){

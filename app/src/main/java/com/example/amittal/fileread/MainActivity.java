@@ -38,23 +38,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         if (isWriteContactAllowed() && isExternalStorageAllowed()) {
             Toast.makeText(MainActivity.this, "You already have the permission", Toast.LENGTH_LONG).show();
-            Log.d("permission","You already have the permission");
+            Log.d("permission", "You already have the permission");
             //getFile();
             test();
         } else {
             requestWriteContactPermission();
             requestExternalStoragePermission();
             Toast.makeText(MainActivity.this, "Giving You Permission", Toast.LENGTH_LONG).show();
-            Log.d("permission","Giving you permission");
+            Log.d("permission", "Giving you permission");
             //getFile();
             test();
         }
-        /*try{
-            ExcelDataRead.read("/storage/emulated/0/Download/myExcel.xls");
-        }catch(Exception ex){
-            ex.printStackTrace();
-        }*/
-        //test();
+
     }
 
     private boolean isExternalStorageExist() {
@@ -64,13 +59,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             return state.equals(Environment.MEDIA_MOUNTED) || state.equals(
                     Environment.MEDIA_MOUNTED_READ_ONLY);
         }
-        //Boolean isSDPresent =android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED);
         return false;
     }
 
     public void getFile() {
 
-        // if (isExternalStorageExist()) {
         Intent chooser = new Intent(Intent.ACTION_GET_CONTENT);
         Uri uri = Uri.parse(Environment.getDownloadCacheDirectory().getPath().toString());
         chooser.addCategory(Intent.CATEGORY_OPENABLE);
@@ -83,47 +76,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     Toast.LENGTH_SHORT).show();
         }
 
-        //}else{
-        //Toast.makeText(this, dbStr,Toast.LENGTH_SHORT).show();
-        //}/data/local/tmp/com.example.amittal.fileread
     }
 
-    /*public void test(){
-
-        Intent intent = new Intent();
-        intent.setType("video*//*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Select Video"), 1);
-    }*/
-
-    /*public void onActivityResult(int requestCode, int resultCode, Intent result) {
-
-        String response = null;
-        if (resultCode == RESULT_OK) {
-            if (requestCode == 1) {
-                Uri data = result.getData();
-
-                Toast.makeText(this, data.getPath(), Toast.LENGTH_SHORT).show();
-                File downloadDir = new File(Environment.getExternalStoragePublicDirectory(
-                        Environment.DIRECTORY_DOWNLOADS).getAbsolutePath());
-                //getFilesFromDir(downloadDir);
-
-                if (data.getLastPathSegment().endsWith("xls")) {
-                    String dbStr = Environment.getExternalStorageDirectory().getAbsolutePath() + "/contact.xls";
-                    ExcelDataRead excelDataRead = new ExcelDataRead();
-                    excelDataRead.readExcelFile(MainActivity.this, dbStr);
-
-                    Toast.makeText(this, "valid file type", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(this, "Invalid file type", Toast.LENGTH_SHORT).show();
-                }
-            } else {
-                Toast.makeText(this, "No result found", Toast.LENGTH_SHORT).show();
-            }
-        } else {
-            Toast.makeText(this, "No result found == -1", Toast.LENGTH_SHORT).show();
-        }
-    }*/
 
     private void requestWriteContactPermission() {
 
@@ -172,27 +126,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return false;
     }
 
-    /*public void getFilesFromDir(File filesFromSD) {
-
-        File listAllFiles[] = filesFromSD.listFiles();
-
-        if (listAllFiles != null && listAllFiles.length > 0) {
-            for (File currentFile : listAllFiles) {
-                if (currentFile.isDirectory()) {
-                    getFilesFromDir(currentFile);
-                } else {
-                    if (currentFile.getName().endsWith("")) {
-                        // File absolute path
-                        Log.e("File path", currentFile.getAbsolutePath());
-                        // File Name
-                        Log.e("File path", currentFile.getName());
-
-                    }
-                }
-            }
-        }
-    }*/
-
     public void test() {
 
         ArrayList<String> FOLDERS = new ArrayList<String>();
@@ -200,7 +133,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         int CALL_COUNT = 0;
         String path = Environment.getExternalStorageDirectory().getPath() + "/";
-        Log.d("Envn Path : ", path);
+        Log.d("Environment Path : ", path);
         Toast.makeText(MainActivity.this, path, Toast.LENGTH_LONG).show();
         try {
             File dirFolder = new File(path);
@@ -209,24 +142,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             for (File file : folders) {
                 if (file.isDirectory()) {
                     FOLDERS.add(path + file.getName() + "/");
-                    Toast.makeText(MainActivity.this, file.getName(), Toast.LENGTH_LONG).show();
+                    //Toast.makeText(MainActivity.this, file.getName(), Toast.LENGTH_LONG).show();
+                    Log.d("Folder : ", path);
                 } else {
                     Toast.makeText(MainActivity.this, excelFile.getText(), Toast.LENGTH_LONG).show();
                     if (file.getName().contains(excelFile.getText() + ".xls")) {
-                        Toast.makeText(MainActivity.this, file.getName()+"...", Toast.LENGTH_LONG).show();
+                        Toast.makeText(MainActivity.this, file.getName() + "...", Toast.LENGTH_LONG).show();
                         XLS_FILES.add(path + file.getName());
-
-
                     } else {
-                        Toast.makeText(MainActivity.this, "No File Found", Toast.LENGTH_LONG).show();
-                        // FILE_PATH = path + file.getName();
-                        // Log.e("File Deatils", "" + FILE_PATH);
+                        //If Files is not found then automatically go to the next else
                     }
                 }
             }
-            Log.d("1", XLS_FILES.get(0));
-            ExcelDataRead excelDataRead = new ExcelDataRead();
-            excelDataRead.readExcelFile(this, XLS_FILES.get(0));
+            if (!XLS_FILES.isEmpty() && XLS_FILES.size() > 0) {
+                Log.d("1", XLS_FILES.get(0));
+                ExcelDataRead excelDataRead = new ExcelDataRead();
+                excelDataRead.readExcelFile(MainActivity.this, XLS_FILES.get(0));
+            } else {
+                Toast.makeText(MainActivity.this, "No File Found", Toast.LENGTH_LONG).show();
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
