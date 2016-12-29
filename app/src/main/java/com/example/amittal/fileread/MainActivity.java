@@ -200,23 +200,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         int CALL_COUNT = 0;
         String path = Environment.getExternalStorageDirectory().getPath() + "/";
-        Log.d("Envn Path : ",path);
+        Log.d("Envn Path : ", path);
+        Toast.makeText(MainActivity.this, path, Toast.LENGTH_LONG).show();
         try {
-
             File dirFolder = new File(path);
             File[] folders = dirFolder.listFiles();
 
             for (File file : folders) {
                 if (file.isDirectory()) {
                     FOLDERS.add(path + file.getName() + "/");
+                    Toast.makeText(MainActivity.this, file.getName(), Toast.LENGTH_LONG).show();
                 } else {
-
+                    Toast.makeText(MainActivity.this, excelFile.getText(), Toast.LENGTH_LONG).show();
                     if (file.getName().contains(excelFile.getText() + ".xls")) {
-
+                        Toast.makeText(MainActivity.this, file.getName()+"...", Toast.LENGTH_LONG).show();
                         XLS_FILES.add(path + file.getName());
 
 
                     } else {
+                        Toast.makeText(MainActivity.this, "No File Found", Toast.LENGTH_LONG).show();
                         // FILE_PATH = path + file.getName();
                         // Log.e("File Deatils", "" + FILE_PATH);
                     }
