@@ -30,7 +30,7 @@ public class ExcelDataRead {
     static String TAG = "ExelLog";
     private List<String> name = new ArrayList<>();
     private List<String> mobile = new ArrayList<>();
-
+    private Map<String,String> contacts = new HashMap<>();
 
     public void readExcelFile(Context context, String filename) {
         try {
@@ -38,6 +38,7 @@ public class ExcelDataRead {
             Log.d(TAG,filename);
             //Log.d(TAG,android.os.Environment.get);
             Log.d(TAG,context.getExternalFilesDir(null).getCanonicalPath()+"/../../");
+
             File file = new File(filename);
             //getFilesFromDir(file);
             FileInputStream myInput = new FileInputStream(file);
@@ -58,22 +59,35 @@ public class ExcelDataRead {
             while (rowIter.hasNext()) {
                 HSSFRow myRow = (HSSFRow) rowIter.next();
                 Iterator cellIter = myRow.cellIterator();
-                while (cellIter.hasNext()) {
-                    int i=0;
-                    HSSFCell myCell = (HSSFCell) cellIter.next();
-                    Log.d(TAG, "Cell Value: " + myCell.toString());
-                    Toast.makeText(context, "cell Value: " + myCell.toString(), Toast.LENGTH_SHORT).show();
-                    //contacts.put(i,myCell.toString());
-                    i++;
-                }
+                iterating(cellIter,context);
             }
-            insertContact(context.getContentResolver(),"","");
-
+            for (Map.Entry<String, String> entry : contacts.entrySet()){
+                Log.d(entry.getKey(),entry.getValue());
+                insertContact(context.getContentResolver(),entry.getValue(),entry.getKey());
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         return;
+    }
+
+    private void iterating(Iterator cellIter, Context context){
+
+        int i=1;
+        FileReadPojo fileReadPojo = new FileReadPojo();
+        while (cellIter.hasNext()){
+            HSSFCell myCell = (HSSFCell) cellIter.next();
+            Log.d(TAG, "Cell Value: " + myCell.toString());
+            Toast.makeText(context, "cell Value: " + myCell.toString(), Toast.LENGTH_SHORT).show();
+            if(i%2!=0){
+                fileReadPojo.setName(myCell.toString());
+            }else{
+                fileReadPojo.setMobile(myCell.toString());
+                contacts.put(fileReadPojo.getMobile(),fileReadPojo.getName());
+            }
+            i++;
+        }
     }
 
     public boolean insertContact(ContentResolver contactAdder, String firstName, String mobileNumber) {
@@ -92,25 +106,4 @@ public class ExcelDataRead {
         }
         return true;
     }
-
-    /*public static void read(String file) throws IOException, TikaException, SAXException {
-
-        //detecting the file type
-        BodyContentHandler handler = new BodyContentHandler();
-        Metadata metadata = new Metadata();
-        FileInputStream inputstream = new FileInputStream(new File(file));
-        ParseContext pcontext = new ParseContext();
-
-        //OOXml parser
-        OOXMLParser  msofficeparser = new OOXMLParser ();
-        msofficeparser.parse(inputstream, handler, metadata,pcontext);
-        System.out.println("Contents of the document:" + handler.toString());
-        System.out.println("Metadata of the document:");
-        String[] metadataNames = metadata.names();
-
-        for(String name : metadataNames) {
-            System.out.println(name + ": " + metadata.get(name));
-        }
-    }*/
-
 }
